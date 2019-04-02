@@ -34,9 +34,9 @@ EXCEPTIONS_DICT = {
 def handle_exceptions(exc, context):
     exc_type = type(exc).__name__
     response = exception_handler(exc, context)
-    errors_list = list(exc.detail.values())
-
     if hasattr(exc, "detail"):
+        errors_list = list(exc.detail.values()) \
+            if type(exc.detail) == dict else False
         if hasattr(exc.detail, "values") and errors_list:
             message_text = [
                 error if type(error) == ErrorDetail else error[0]
@@ -45,11 +45,17 @@ def handle_exceptions(exc, context):
         else:
             message_text = exc.detail
         response.data = {"message": message_text, "type": exc_type}
-        
     elif exc_type in EXCEPTIONS_DICT.keys():
         response = Response(
             {"message": EXCEPTIONS_DICT[exc_type]["text"], "type": exc_type},
             status=EXCEPTIONS_DICT[exc_type]["status_code"])
+    elif hasattr(exc, "args"):
+        message_text = [error for error in exc.args]
+        response = Response(
+            {"message": message_text, "type": exc_type},
+            status=status.HTTP_400_BAD_REQUEST)
+
+
     else:
         response = Response({"message": exc_type, "type": exc_type},
                             status=status.HTTP_400_BAD_REQUEST)
@@ -59,7 +65,8 @@ def handle_exceptions(exc, context):
 def get_error_response(data=None):
     dict_error = data.get("type")
     error_instance = EXCEPTIONS_DICT.get(dict_error)
-    error_message = data.get("message", error_instance.get("text", None))
+    default_value = error_instance.get("text") if error_instance else None
+    error_message = data.get("message", default_value)
     if dict_error and error_instance:
         response_data = {
             "error": {

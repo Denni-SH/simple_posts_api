@@ -9,4 +9,5 @@ API_PATH = f"api/v1"
 urlpatterns = [
     path(f'admin/', admin.site.urls),
     path(f'{API_PATH}/user/', include('apps.users.urls')),
-  ]
+    path(f'{API_PATH}/posts/', include('apps.posts.urls')),
+]
