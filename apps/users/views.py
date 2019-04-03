@@ -21,6 +21,7 @@ class UserCreateView(CreateAPIView):
     @staticmethod
     def check_request_for_extra_info(request):
         user_email = request.data.get("email")
+        request.data._mutable = True
         if user_email:
             response = clearbit.Enrichment.find(email=user_email, stream=True)
             fields = ["avatar", "facebook", "twitter", "linkedin", "github"]
@@ -44,7 +45,7 @@ class UserCreateView(CreateAPIView):
         )
     
     def post(self, request, *args, **kwargs):
-        # request = self.check_request_for_extra_info(request)
+        request = self.check_request_for_extra_info(request)
         return super().post(request, *args, **kwargs)
 
 

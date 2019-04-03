@@ -54,6 +54,7 @@ class UserCreateSerializer(ModelSerializer):
         extra_kwargs.update(dict.fromkeys(
             ['password', 'username', 'email'],
             {"required": True}))
+        extra_kwargs.update({'password': {'write_only': True}})
 
     def create(self, request, *args, **kwargs):
         user = User.create(**request)
