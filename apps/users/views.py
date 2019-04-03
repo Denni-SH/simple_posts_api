@@ -21,7 +21,10 @@ class UserCreateView(CreateAPIView):
     @staticmethod
     def check_request_for_extra_info(request):
         user_email = request.data.get("email")
-        request.data._mutable = True
+        from django.conf import settings
+
+        if settings.TESTING:
+            request.data._mutable = True
         if user_email:
             response = clearbit.Enrichment.find(email=user_email, stream=True)
             fields = ["avatar", "facebook", "twitter", "linkedin", "github"]
