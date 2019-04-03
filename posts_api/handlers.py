@@ -63,10 +63,14 @@ def handle_exceptions(exc, context):
 
 
 def get_error_response(data=None):
-    dict_error = data.get("type")
-    error_instance = EXCEPTIONS_DICT.get(dict_error)
-    default_value = error_instance.get("text") if error_instance else None
-    error_message = data.get("message", default_value)
+    dict_error = None
+    error_instance = None
+    error_message = None
+    if type(data) == dict:
+        dict_error = data.get("type")
+        error_instance = EXCEPTIONS_DICT.get(dict_error)
+        default_value = error_instance.get("text") if error_instance else None
+        error_message = data.get("message", default_value)
     if dict_error and error_instance:
         response_data = {
             "error": {
@@ -80,9 +84,10 @@ def get_error_response(data=None):
                 else list(data.values())[0]
         data = list(data.keys())[0] \
             if type(data).__name__ == "ReturnDict" else data
+        data = data if type(data) == str else data.get("type", data)
         response_data = {
             "error": {
-                "type": data.get("type", data),
+                "type": data,
                 "message": message
             }
         }

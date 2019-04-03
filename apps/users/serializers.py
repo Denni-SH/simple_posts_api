@@ -7,24 +7,35 @@ from rest_framework_jwt.serializers import JSONWebTokenSerializer
 
 from .models import User
 
-USER_EXTRA_KWARGS = dict.fromkeys(
-    ['_state',
-     'is_superuser',
-     'is_staff',
-     'password',
-     'is_active',
-     'backend'
-     ], {"write_only": True}
+EXCLUDED_FIELDS = (
+    '_state',
+    'is_superuser',
+    'is_staff',
+    'password',
+    'is_active',
+    'backend',
+    'groups',
+    'user_permissions',
+    'date_joined',
 )
 
+USER_EXTRA_KWARGS = dict.fromkeys(EXCLUDED_FIELDS, {"write_only": True})
 
-USER_FIELDS = ['id',
-               'username',
-               'first_name',
-               'last_name',
-               'birth_date',
-               'phone',
-               'email']
+
+USER_FIELDS = [
+    'id',
+    'username',
+    'first_name',
+    'last_name',
+    'birth_date',
+    'phone',
+    'email',
+    'avatar',
+    'github',
+    'linkedin',
+    'facebook',
+    'twitter',
+]
 
 
 class UserSerializer(ModelSerializer):

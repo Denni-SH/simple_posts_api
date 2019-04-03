@@ -13,7 +13,12 @@ class User(AbstractUser):
     last_name = CharField(
         _('last name'), max_length=150, blank=True, null=True,
     )
-    
+    avatar = CharField(max_length=250, blank=True, default=None, null=True)
+    github = CharField(max_length=100, blank=True, default=None, null=True)
+    linkedin = CharField(max_length=100, blank=True, default=None, null=True)
+    twitter = CharField(max_length=100, blank=True, default=None, null=True)
+    facebook = CharField(max_length=100, blank=True, default=None, null=True)
+
     @classmethod
     def create(cls, **kwargs):
         new_user = cls()
@@ -24,6 +29,12 @@ class User(AbstractUser):
         new_user.password = make_password(kwargs.get('password'))
         new_user.phone = kwargs.get('phone')
         new_user.username = kwargs.get('username')
+
+        new_user.avatar = kwargs.get('avatar')
+        new_user.github = kwargs.get('github')
+        new_user.linkedin = kwargs.get('linkedin')
+        new_user.twitter = kwargs.get('twitter')
+        new_user.facebook = kwargs.get('facebook')
         return new_user
 
     def __str__(self):
