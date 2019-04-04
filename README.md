@@ -33,7 +33,11 @@ $ pip install -r requirements.txt
 4) Create and fill .env with .env.example.
 
 
-5) Run the tests.
+5) Run the tests:
+
+```
+$ python manage.py test apps/
+```
 
 
 6) Then run the server:
